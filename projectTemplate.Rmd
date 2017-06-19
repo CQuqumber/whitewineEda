@@ -1,7 +1,7 @@
 # WhiteWineQuality by HsiAnHuang
 ========================================================
-```
-{r global_options, include=FALSE} knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+```{r global_options, include=FALSE} 
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
 ```
 ```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
 library('dplyr')
@@ -51,13 +51,13 @@ wine<- fread('wineQualityWhites.csv')
 
 
 # Univariate Plots Section
-### 使用dplyr庫裡面glimpse，summary，去探索數據庫裡面的所有資訊，維度，變量數，變量型態，以及統計數據。
+#### 使用dplyr庫裡面glimpse，summary，去探索數據庫裡面的所有資訊，維度，變量數，變量型態，以及統計數據。
 ```{r echo=FALSE}
 glimpse(wine)
 summary(wine[,2:12])
 cor(wine[,2:12], wine$quality)
 ```
-為了方便，分析每個變量，我們寫一個函式
+為了方便分析每個變量，我們寫一個函式，把Boxplot point， histogram合再一起看。
 ```{r}
 unit_var <- function(variable, bins) {
   grid.arrange(ggplot(wine, aes_string(x = 1, y = variable)) +
@@ -81,7 +81,13 @@ unit_var ("quality", 7)
 summary(wine$quality)
 t.test(wine$quality, alternative = 't')
 ```
-在目標變量Quality的統計數據，中位數/median是**6**，均值**5.878**，得知大多數的評價，集中在評比6。Outlier是**3,8,9**可見兩極評價相比之下非常少，我們可以從boxplot, histogram得到驗證。
+在目標變量Quality的統計數據，
+- 中位數/median是**6**，
+- 均值**5.878**
+- 大多數的評價，集中在評比6。
+- Outlier是**3,8,9**
+
+可見兩極評價相比之下非常少，我們可以從boxplot, histogram得到驗證。
 
 ```{r}
 unit_var('alcohol',50)
@@ -89,6 +95,7 @@ unit_var_log('alcohol',50)
 summary(wine$alcohol)
 ```
 酒精分佈，是類似right-skewed的高斯分佈，統計數據 50% 數據集中9.50至11.40之間，中位數   10.40。
+
 [统计学中为什么要对变量取对数？](https://www.zhihu.com/question/22012482)
 解釋不要讓方差過大，讓波動相對穩定，透過對數轉換可以做到這一點。
 ```{r}
@@ -96,13 +103,16 @@ unit_var('volatile.acidity',50)
 unit_var_log('volatile.acidity',40)
 summary(wine$volatile.acidity)
 ```
-揮發度酸，有者懸殊很大的離群數outlier，對比品質少數走向兩極，可以猜測揮發度酸的outlier可能會影響白酒評價，不是優質，就是劣質。
+揮發性酸，有者懸殊很大的離群數outlier，對比品質少數走向兩極。
+
+可以猜測揮發度酸的outlier可能會影響白酒評價，不是優質，就是劣質。
 ```{r}
 unit_var('citric.acid',50)
 unit_var_log('citric.acid',40)
 summary(wine$citric.acid)
 ```
-citric.acid 檸檬酸，數據出現**0**，outlier 1.6600遠遠超過，均值0.3342，3rd percentile 0.3900。
+citric.acid 檸檬酸，數據出現**0**。
+outlier 1.6600遠遠超過，均值0.3342，3rd percentile 0.3900。
 
 ```{r}
 unit_var('sulphates',50)
@@ -116,21 +126,29 @@ unit_var('density',50)
 unit_var_log('density',40)
 summary(wine$density)
 ```
-Density密度，是一個分佈很平均的變量，從boxplot可以得知，以及極少數的outliers，數據分佈在0.994附近，水密度為1，某種程度上來說，酒裡面大致上都是水也是沒錯的。
+Density密度，是一個分佈很平均的變量，從boxplot可以得知，以及極少數的outliers，
+數據分佈在0.994附近，水密度為1，某種程度上來說，酒裡面大致上都是水也是沒錯的。
+
 ```{r}
 unit_var('pH',50)
 unit_var_log('pH',40)
 summary(wine$pH)
 ```
-pH，50%範圍，介於 3.09 至 3.28之間，最小值為2.72,最大值3.82
+
+**pH**，50%範圍，介於 3.09 至 3.28之間，最小值為2.72,最大值3.82
 pH酸鹼值，是一個常態分佈，中位數幾乎等同平均值 3.18，有者雙邊tail values（outlier）。
+
 ```{r}
 unit_var('residual.sugar',50)
 unit_var_log('residual.sugar',40)
 summary(wine$residual.sugar)
 ```
-residual.sugar/殘餘糖，數據分佈很散亂，平均值5.2，最大值65.8，分佈上是一個嚴重
-right-skewed，酒精也是一個right-skewed的變量，彼此之間是否存在collinear是一個可以探討議題。
+
+residual.sugar/殘餘糖，數據分佈很散亂。
+- 平均值5.2
+- 最大值65.8
+分佈上是一個嚴重right-skewed，酒精也是一個right-skewed的變量，彼此之間是否存在collinear是一個可以探討議題。
+
 取了對數之後，全殘餘糖，**出兩個峰值**，可以推估，可能原始分佈存在兩個高斯變數。
 
 
@@ -227,6 +245,7 @@ scatter_plot("volatile.acidity") +
               size = 1)
 cor(wine$quality, wine$volatile.acidity)
 ```
+
 Volatile acidity 「揮發酸度」，走勢圖得知，揮發越高，評價都不會太好。
 
 ```{r}
@@ -239,7 +258,9 @@ scatter_plot("total.sulfur.dioxide") +
 cor(wine$quality, wine$total.sulfur.dioxide)
 
 ```
-排除評價低的白酒，總二氧化硫濃度越低，評價趨向越高，而**二氧化硫**並不是天然產物，而是避免紅白酒氧化作用的額外添加物，越少的添加物會讓酒的天然度大增。
+
+排除評價低的白酒，總二氧化硫濃度越低，評價趨向越高。
+**二氧化硫**並不是天然產物，而是避免紅白酒氧化作用的額外添加物，越少的添加物會讓酒的天然度大增。
 
 ```{r}
 scatter_plot("density") + 
@@ -260,13 +281,17 @@ scatter_plot("residual.sugar") +
               size = 1)
 cor(wine$quality, wine$residual.sugar)
 ```
-這裡可以得知，密度，殘餘糖越低，評價會走向越高的負相關性，其從文檔，也可以發現density的定義就是
-_density: the density of water is close to that of water depending on the percent alcohol and sugar content_
+
+這裡可以得知，密度，殘餘糖越低，評價會走向越高的負相關性，其從文檔也可以發現density的定義就是：
+
+「 _density: the density of water is close to that of water depending on the percent alcohol and sugar content_ 」
+
 酒精，密度，殘餘糖，這會是緊緊相連的物理，化學作用之下，相依性很強的變量。
 
 但是如果懂釀酒過程，不懂也可以從高中化學知道，酒精的來源也就是糖，再氧化為醇，醛，酸。
 
 認為這不是很意外的結果，糖氧化完全，就是高濃度酒精，沒有氧化完全，酒精產量就少，所以**殘餘糖，酒精**是一個trade off的關係。以下是驗證假設是否成立。
+
 ```{r}
 ggplot(aes(alcohol,residual.sugar), data = wine)+
   geom_point(alpha=.5)+
@@ -274,8 +299,8 @@ ggplot(aes(alcohol,residual.sugar), data = wine)+
   scale_y_log10()
 cor(wine$alcohol, wine$residual.sugar)
 ```
-果然沒有任何一點意外，這兩個變量就是，一高一低的絕對關係，相關係數-0.4506312。
 
+果然沒有任何一點意外，這兩個變量就是，一高一低的絕對關係，相關係數-0.4506312。
 
 酒精如果氧化過多，就會變成過多的酸，我們就來驗證這假設是否成立。
 
@@ -300,14 +325,19 @@ cor(wine$alcohol, wine$fixed.acidity)
 cor(wine$alcohol, wine$volatile.acidity)
 cor(wine$alcohol, wine$citric.acid)
 ```
-Alcohol and citric.acid: -0.07572873
-Alcohol and fixed.acidity: -0.1208811
-Alcohol and volatile.acidity: 0.06771794
+
+- Alcohol and citric.acid: -0.07572873
+- Alcohol and fixed.acidity: -0.1208811
+- Alcohol and volatile.acidity: 0.06771794
+
 酒精在citric.acid/檸檬酸，fixed.acidity/固定酸，呈現微弱負相關，但在酒精濃度11之後呈現強的負相關。
+
 相反的例子，volatile.acidity/揮發酸，在酒精濃度11開始呈現正相關，我的解釋是揮發性酸是釀造過程中的副產物，如果酒裡面有**醋菌/Acetic Bacteria**會把酒精轉為揮發性酸，那麼濃度越高的酒精，產生的揮發性酸就越多，並不是一種一比一的轉換關係，而是揮發酸只要少量酒精，產生少量揮發酸就會造成酒劣質，所以才會出現正向關係。
+
 我們在下一個階段**多變量**可以探討，酒精，揮發酸，評價的關係。
 
 我們來看看**木塞污染**
+
 ```{r}
 scatter_plot("chlorides") +
   geom_smooth(aes(quality-2, chlorides), 
@@ -318,11 +348,13 @@ scatter_plot("chlorides") +
   scale_y_log10()
 cor(wine$quality, wine$chlorides)
 ```
+
 當木塞中寄居的真菌接觸到酒莊不衛生的環境或消毒殘留物中的chlorides/氯化物時，TCA 就形成了。因此如果酒莊使用帶有 TCA (三氯苯甲醚，2,4,6 - trichloroanisole）的軟木塞，那麼酒液也會相應受到一定程度的污染。
 所以，氯化物是造成整體污染的指標，並非口感。
 所以氯化物越少評比會越好。
 
 寒冷氣候產區的白葡萄酒pH值普遍在3.0之3.2之間，酸度的預防功效基於大多數菌類無法在這麼惡劣的環境裡生存，pH以及評價之間的關係。
+
 ```{r}
 scatter_plot("pH") + 
   geom_smooth(aes(quality-2, pH), 
@@ -332,10 +364,12 @@ scatter_plot("pH") +
               size = 1)
 cor(wine$quality, wine$pH)
 ```
+
 酸度比較低，評價走高，影響 pH的因素太多，各種化學物質，
 
-再來，如果酸度濃度提高，pH數值總該要下降吧。這是高中化學常識等級的問題，
+再來，如果酸度濃度提高，pH數值要下降，這是高中化學常識等級的問題，
 我們就在白葡萄酒數據驗證看看。
+
 ```{r}
 ggplot(aes(x = fixed.acidity, y = pH), data = wine) +
   geom_jitter( alpha = 0.2) +
@@ -367,10 +401,13 @@ _density: the density of water is close to that of water depending on the percen
 
 
 # Multivariate Plots Section
-把酒話分成三個部分，
-1. 劣質/Inferior（評價3,4）
-2. 中等/Middle ，（評價5,6）
-3. 優等/Highquality（評價7,8）
+
+#### 把酒分成三個部分
+
+1. #### 劣質/Inferior（評價3,4）
+2. #### 中等/Middle ，（評價5,6）
+3. #### 優等/Highquality（評價7,8）
+
 ```{r echo=FALSE, Multivariate_Plots}
 wine$quality.rating <- ifelse(wine$quality <= 4, "Inferior", 
                               (ifelse(wine$quality <= 6, "Middle", "Highquality"))
@@ -385,9 +422,11 @@ ggplot(wine, aes(y = volatile.acidity , x = alcohol, color = quality.rating)) +
   theme_dark() +
   geom_smooth(method = "lm", se = FALSE, size = 1)
 ```
+
 上圖顯示，
+
 1. 劣質酒不論哪種濃度的酒精，他的揮發酸濃度都比較高。
-2. 中等酒的濃度走向一致性
+2. 中等酒的濃度走向一致性。
 3. 優質酒在酒精濃度 11以下，普遍都有很低的揮發酸度。
 
 但是濃度高的揮發酸度時候，卻否決了我之前的認知（揮發酸高評價會差），不過outlier來說，優質白酒並沒有多數以及離譜的高揮發酸度，也許在揮發酸度0.6之前沒有顯著的醋酸風味。
@@ -429,11 +468,13 @@ ggplot(wine, aes(chlorides, sulphates, color = quality.factor)) +
   ylim(0.25, quantile(wine$sulphates, 0.95)) + 
   facet_wrap(~ quality.rating)
 ```
+
 氯化物，以及硫酸鹽化學反應不明顯，氯化物容易呈現氯離子cl-，硫酸鹽呈現硫酸都是負離子，彼此之間也的確不太會反應。
 
 # Multivariate Analysis
 
 ### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+
 物理密度換算，酒精/固定酸，酒精/密度，顯示物理性不能違背。
 酒精濃度高，通常評價高，相對密度就低，所以固定酸多數在密度低的情況會有很多優質酒。
 這說一個換句話的機本蓋念。
@@ -453,24 +494,29 @@ unit_var('alcohol',50)
 ```
 
 ### Description One
+
 影響評價最大的因素，就是酒精，相關係數達0.4355，數據只是弱相關，但是如果排劣質評價，
 酒精確實跟評價呈現出強大正相關走勢。
+
 分佈圖，箱子圖，得知主要數據集中在中等評價，劣質優等評價確實相對很少。
 
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
 ggplot(data = wine, 
-       aes(x = density, y = alcohol, color = quality.rating)) +
+       aes(x = density, y = alcohol, color = quality.factor)) +
    geom_point(alpha = 1/2, position = position_jitter(h = 0), size = 2) +
    coord_cartesian(xlim=c(min(wine$density),1.005), ylim=c(8,15)) +
    scale_color_brewer(type='qual') +
    xlab('Density') +
    ylab('Alcohol') +
-   ggtitle('Density vs. Alcohol correlation by Quality')
+   ggtitle('密度 vs. 酒精關係，以及品質評價')
 ```
 
 ### Description Two
-高評價白酒，密度稍為低，酒精成分高，酒精密度0.789 kg/m3，當酒精密度高，意味含量多，水的密度是1.0，所以密度自然被酒精影響。
+
+已知資訊，酒精含量高，評價會越高，這個前提之下，討論密度酒精之間關係。
+
+高評價白葡萄酒，密度稍為低，酒精成分高，酒精密度0.789 kg/m3，當酒精密度高，意味含量多，水的密度是1.0，所以密度自然被酒精影響。
 
 
 ### Plot Three
