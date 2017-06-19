@@ -223,7 +223,9 @@ scatter_plot("alcohol") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   ylab('Alcohol (% by volume) ') +
+   xlab('Quality Factor')
 cor(wine$quality, wine$alcohol)
 ```
 
@@ -242,7 +244,9 @@ scatter_plot("volatile.acidity") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   ylab('Volatile Acidity (g / dm^3)') +
+   xlab('Quality Factor')
 cor(wine$quality, wine$volatile.acidity)
 ```
 
@@ -254,7 +258,9 @@ scatter_plot("total.sulfur.dioxide") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   ylab('Total Sulfur Dioxide (mg / dm^3)') +
+   xlab('Quality Factor')
 cor(wine$quality, wine$total.sulfur.dioxide)
 
 ```
@@ -268,7 +274,9 @@ scatter_plot("density") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   ylab('Density (g/dm^3)') +
+   xlab('Quality Factor')
 cor(wine$quality, wine$density)
 ```
 
@@ -278,7 +286,9 @@ scatter_plot("residual.sugar") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   xlab('Residual.sugar (g/dm^3)') +
+   ylab('Quality Factor')
 cor(wine$quality, wine$residual.sugar)
 ```
 
@@ -296,7 +306,10 @@ cor(wine$quality, wine$residual.sugar)
 ggplot(aes(alcohol,residual.sugar), data = wine)+
   geom_point(alpha=.5)+
   geom_smooth()+ 
-  scale_y_log10()
+  scale_y_log10()+
+   xlab('Chlorides (g/dm^3)') +
+   ylab('Quality Factor') +
+   ggtitle('Chlorides Boxplot Correspond to Quality')
 cor(wine$alcohol, wine$residual.sugar)
 ```
 
@@ -308,17 +321,23 @@ cor(wine$alcohol, wine$residual.sugar)
 ggplot(aes(alcohol, fixed.acidity), data = wine)+
   geom_point( alpha = 0.2) +
   geom_smooth() + 
-  scale_y_log10()
+  scale_y_log10()+
+   xlab('Log10 Alcohol (% by volume)') +
+   ylab('Fixed Acidity(g / dm^3)') 
 
 ggplot(aes(x = alcohol, y = volatile.acidity), data = wine) +
   geom_point( alpha = 0.2) +
   geom_smooth() + 
-  scale_y_log10() 
+  scale_y_log10()+
+   xlab('Log10 Alcohol (% by volume)') +
+   ylab('Volatile Acidity (g / dm^3)')  
 
 ggplot(aes(x = alcohol, y = citric.acid), data = wine) +
   geom_point( alpha = 0.2) +
   geom_smooth() + 
-  scale_y_log10()
+  scale_y_log10()+
+   xlab('Log10 Alcohol (% by volume)') +
+   ylab('Citric Acid(g / dm^3)') 
 
 
 cor(wine$alcohol, wine$fixed.acidity)
@@ -344,7 +363,10 @@ scatter_plot("chlorides") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1) + 
+              size = 1) +
+   xlab('Chlorides (sodium chloride - g / dm^3)') +
+   ylab('Quality Factor') +
+   ggtitle('Chlorides Boxplot Correspond to Quality')+ 
   scale_y_log10()
 cor(wine$quality, wine$chlorides)
 ```
@@ -361,7 +383,10 @@ scatter_plot("pH") +
               data = wine, 
               method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1) +
+   xlab('pH') +
+   ylab('Quality Factor') +
+   ggtitle('pH Boxplot Correspond to Quality')
 cor(wine$quality, wine$pH)
 ```
 
@@ -377,7 +402,10 @@ ggplot(aes(x = fixed.acidity, y = pH), data = wine) +
        quantile(wine$fixed.acidity, 0.99)) +
   ylim(quantile(wine$pH, 0.01),
        quantile(wine$pH, 0.99))+ 
-  geom_smooth()
+  geom_smooth() +
+   xlab('pH') +
+   ylab('Fixed Acidity  (tartaric acid - g / dm^3)') +
+   ggtitle('pH vs. Fixed Acidity')
 
 cor(wine$pH, wine$fixed.acidity)
 ```
@@ -420,7 +448,10 @@ ggplot(wine, aes(y = volatile.acidity , x = alcohol, color = quality.rating)) +
   geom_jitter( alpha = 0.7) +
   scale_colour_brewer(palette="Greens") +
   theme_dark() +
-  geom_smooth(method = "lm", se = FALSE, size = 1)
+  geom_smooth(method = "lm", se = FALSE, size = 1)+
+   xlab('Volatile Acidity (acetic acid - g / dm^3)') +
+   ylab('Alcohol  (% by volume) ') +
+   ggtitle('Volatile Acidity vs. Alcohol Correlation, with Quality Trend Line')
 ```
 
 上圖顯示，
@@ -443,7 +474,10 @@ grid.arrange(
       quantile(wine$fixed.acidity, 0.99))+
   geom_smooth(method = "lm", 
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   xlab('Density (g / cm^3) ') +
+   ylab('Fixed Acidity (g / dm^3)') +
+   ggtitle('Density vs. Fixed Acidity Correlation, with Quality Trend Line')
   ,
 ggplot(wine, aes(density, alcohol, color = quality.rating)) + 
   geom_point(alpha = .5) + 
@@ -455,7 +489,10 @@ ggplot(wine, aes(density, alcohol, color = quality.rating)) +
       quantile(wine$alcohol, 0.99))+
   geom_smooth(method = "lm",
               se = FALSE, 
-              size = 1)
+              size = 1)+
+   xlab('Density (g / cm^3)') +
+   ylab('Alcohol  (% by volume) ') +
+   ggtitle('Density vs. Alcohol Correlation, with Quality Trend Line')
 )
 ```
 
@@ -466,7 +503,10 @@ ggplot(wine, aes(chlorides, sulphates, color = quality.factor)) +
    theme_dark() +
   xlim(0, quantile(wine$chlorides, 0.95)) + 
   ylim(0.25, quantile(wine$sulphates, 0.95)) + 
-  facet_wrap(~ quality.rating)
+  facet_wrap(~ quality.rating)   +
+   xlab('Chlorides (g / dm^3)') +
+   ylab('Sulphates (g / dm^3)') +
+   ggtitle('Chlorides vs. Sulphates Correlation, each Quality')
 ```
 
 氯化物，以及硫酸鹽化學反應不明顯，氯化物容易呈現氯離子cl-，硫酸鹽呈現硫酸都是負離子，彼此之間也的確不太會反應。
@@ -503,13 +543,14 @@ unit_var('alcohol',50)
 ### Plot Two
 ```{r echo=FALSE, Plot_Two}
 ggplot(data = wine, 
-       aes(x = density, y = alcohol, color = quality.factor)) +
-   geom_point(alpha = 1/2, position = position_jitter(h = 0), size = 2) +
+       aes(x = density, y = alcohol, color = quality.rating)) +
+   geom_point(alpha = .4, position = position_jitter(h = 0), size = 2) +
    coord_cartesian(xlim=c(min(wine$density),1.005), ylim=c(8,15)) +
-   scale_color_brewer(type='qual') +
-   xlab('Density') +
-   ylab('Alcohol') +
-   ggtitle('密度 vs. 酒精關係，以及品質評價')
+   scale_color_brewer(palette='Reds') +
+  geom_smooth() +
+   xlab('Density (g / cm^3)') +
+   ylab('Alcohol (% by volume) ') +
+   ggtitle('Density vs. Alcohol Correlation, Quality')
 ```
 
 ### Description Two
